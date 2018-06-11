@@ -96,7 +96,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    self.assertEqual(args[8], 'EUR')
+    self.assertEqual(args[10], 'EUR')
 
   def test_price_bucket_validity_missing_key(self, mock_dfp_client):
     """
@@ -181,7 +181,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    num_creatives = args[7]
+    num_creatives = args[9]
     self.assertEqual(num_creatives, 5)
 
   @patch('settings.DFP_NUM_CREATIVES_PER_LINE_ITEM', None, create=True)
@@ -195,7 +195,7 @@ class AddNewPrebidPartnerTests(TestCase):
     """
     tasks.add_new_prebid_partner.main()
     args, kwargs = mock_setup_partners.call_args
-    num_creatives = args[7]
+    num_creatives = args[9]
     self.assertEqual(num_creatives, len(placements))
 
   @patch('tasks.add_new_prebid_partner.create_line_item_configs')
@@ -228,7 +228,9 @@ class AddNewPrebidPartnerTests(TestCase):
       user_email=email,
       advertiser_name=advertiser,
       order_name=order,
+      use_placements=True,
       placements=placements,
+      ad_units=[],
       bidder_code=bidder_code,
       sizes=sizes,
       prices=prices,
@@ -257,7 +259,9 @@ class AddNewPrebidPartnerTests(TestCase):
     configs = tasks.add_new_prebid_partner.create_line_item_configs(
       prices=[100000, 200000, 300000],
       order_id=1234567,
+      use_placements=True,
       placement_ids=[9876543, 1234567],
+      ad_unit_ids=[],
       bidder_code='iamabiddr',
       sizes=[{
         'width': '728',

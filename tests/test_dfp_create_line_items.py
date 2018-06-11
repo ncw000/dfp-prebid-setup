@@ -21,7 +21,9 @@ class DFPCreateLineItemsTests(TestCase):
       dfp.create_line_items.create_line_item_config(
         name='My Line Item',
         order_id=1234567,
+        use_placements=True,
         placement_ids=['one-placement', 'another-placement'],
+        ad_unit_ids=[],
         sizes=[],
         cpm_micro_amount=10000000,
         hb_bidder_key_id=999999,
@@ -47,7 +49,9 @@ class DFPCreateLineItemsTests(TestCase):
       dfp.create_line_items.create_line_item_config(
         name='A Fake Line Item',
         order_id=1234567,
+        use_placements=True,
         placement_ids=['one-placement', 'another-placement-id'],
+        ad_unit_ids=[],
         cpm_micro_amount=24000000,
         sizes=[{
           'width': '728',
@@ -109,7 +113,9 @@ class DFPCreateLineItemsTests(TestCase):
       dfp.create_line_items.create_line_item_config(
         name='Cool Line Item',
         order_id=22334455,
+        use_placements=True,
         placement_ids=['one-placement', 'another-placement-id'],
+        ad_unit_ids=[],
         cpm_micro_amount=40000000,
         sizes=[{
           'width': '728',
