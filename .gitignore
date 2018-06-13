@@ -7,3 +7,4 @@ googleads.yaml
 secret-files.tar
 *.pyc
 local_settings.py
+.vscode

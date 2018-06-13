@@ -196,10 +196,18 @@ def create_line_item_configs(prices, order_id, use_placements, placement_ids, ad
     price_str = num_to_str(micro_amount_to_num(price))
 
     # Autogenerate the line item name.
-    line_item_name = u'{bidder_code}: HB ${price}'.format(
-      bidder_code=bidder_code,
-      price=price_str
-    )
+    line_item_name = ''
+    
+    if getattr(settings, 'DFP_LINE_ITEM_PREFIX', None) is not None and settings.DFP_LINE_ITEM_PREFIX != '':
+      line_item_name=u'{prefix}{price}'.format(
+        prefix=settings.DFP_LINE_ITEM_PREFIX,
+        price=price_str
+      )
+    else:
+      line_item_name=u'{bidder_code}: HB ${price}'.format(
+        bidder_code=bidder_code,
+        price=price_str
+      )
 
     # The DFP targeting value ID for this `hb_pb` price value.
     hb_pb_value_id = HBPBValueGetter.get_value_id(price_str)

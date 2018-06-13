@@ -9,7 +9,7 @@ GOOGLEADS_YAML_FILE = os.path.join(ROOT_DIR, 'googleads.yaml')
 #########################################################################
 
 # A string describing the order
-DFP_ORDER_NAME = 'Nathan Testing21'
+DFP_ORDER_NAME = 'Nathan Testing31'
 
 # The email of the DFP user who will be the trafficker for
 # the created order
@@ -55,6 +55,10 @@ DFP_USE_EXISTING_ORDER_IF_EXISTS = False
 # This will default to the number of placements specified in
 # `DFP_TARGETED_PLACEMENT_NAMES`.
 DFP_NUM_CREATIVES_PER_LINE_ITEM = 4
+
+# An optional prefix string to use for naming line items. When this value is set
+# line items will be named '<prefix>$<price>' instead of '<bidder code> HB $<price>'
+DFP_LINE_ITEM_PREFIX = 'Rubicon_DateMix_728x90_ATF_$'
 
 # Optional
 # The currency to use in DFP when setting line item CPMs. Defaults to 'USD'.
