@@ -9,7 +9,7 @@ GOOGLEADS_YAML_FILE = os.path.join(ROOT_DIR, 'googleads.yaml')
 #########################################################################
 
 # A string describing the order
-DFP_ORDER_NAME = 'Nathan Testing14'
+DFP_ORDER_NAME = 'Nathan Testing21'
 
 # The email of the DFP user who will be the trafficker for
 # the created order
@@ -68,14 +68,27 @@ PREBID_BIDDER_CODE = 'rubicon'
 
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
-# FIXME: this should be an array of buckets. See:
-# https://github.com/prebid/Prebid.js/blob/8fed3d7aaa814e67ca3efc103d7d306cab8c692c/src/cpmBucketManager.js
-PREBID_PRICE_BUCKETS = {
-  'precision': 2,
-  'min' : 0,
-  'max' : 2,
-  'increment': 0.10,
-}
+PREBID_PRICE_BUCKETS = [
+  {
+    'min': 0,
+    'max': 3,
+    'increment': 0.01
+  },
+  {
+    'min': 3,
+    'max': 8,
+    'increment': 0.05
+  },
+  {
+    'min': 8,
+    'max': 20,
+    'increment': 0.5
+  }
+]
+
+# The default precision (# of decimals) for the price buckets above. Can be overridden
+# by specifying the 'precision' property on a bucket
+PREBID_PRICE_PRECISION = 2
 
 #########################################################################
 

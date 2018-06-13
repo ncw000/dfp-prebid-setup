@@ -1,3 +1,4 @@
+import settings
 
 def num_to_micro_amount(num, precision=2):
   """
@@ -39,13 +40,13 @@ def num_to_str(num, precision=2):
   """
   return '%.{0}f'.format(str(precision)) % num 
 
-def get_prices_array(price_bucket):
+def get_prices_array(price_buckets):
   """
   Creates an array of price bucket cutoffs in micro-amounts
   from a price_bucket configuration.
 
   Args:
-    price_bucket (object): the price bucket configuration
+    price_bucket (list): the price bucket configuration as a list of bucket objects
   Returns:
     an array of integers: every price bucket cutoff from:
       int(round(price_bucket['min'] * 10**6, precision)) to 
@@ -54,25 +55,33 @@ def get_prices_array(price_bucket):
 
   # Arbitrary max CPM to prevent large user errors.
   cpm_max_allowed = 500.00
-  end_cpm = (
-    price_bucket['max'] if 
-    price_bucket['max'] < cpm_max_allowed else 
-    cpm_max_allowed)
-
-  start_cpm = price_bucket['min'] if price_bucket['min'] >=0 else 0.00
-  increment = price_bucket['increment']
-  precision = price_bucket['precision']
-
-  start_cpm_micro_amount = num_to_micro_amount(start_cpm, precision)
-  end_cpm_micro_amount = num_to_micro_amount(end_cpm, precision)
-  increment_micro_amount = num_to_micro_amount(increment, precision)
-
-  current_cpm_micro_amount = start_cpm_micro_amount
   prices = []
-  while current_cpm_micro_amount <= end_cpm_micro_amount:
-    prices.append(current_cpm_micro_amount)
-    current_cpm_micro_amount += increment_micro_amount
+
+  for price_bucket in price_buckets:
+    end_cpm = (
+      price_bucket['max'] if 
+      price_bucket['max'] < cpm_max_allowed else 
+      cpm_max_allowed)
+
+    start_cpm = price_bucket['min'] if price_bucket['min'] >=0 else 0.00
+    increment = price_bucket['increment']
+
+    precision = getattr(settings, 'PREBID_PRICE_PRECISION', 2)
+
+    start_cpm_micro_amount = num_to_micro_amount(start_cpm, precision)
+    end_cpm_micro_amount = num_to_micro_amount(end_cpm, precision)
+    increment_micro_amount = num_to_micro_amount(increment, precision)
+
+    current_cpm_micro_amount = start_cpm_micro_amount
     
+    while current_cpm_micro_amount < end_cpm_micro_amount:
+      prices.append(current_cpm_micro_amount)
+      current_cpm_micro_amount += increment_micro_amount
+    
+    # Quit early if we've already exceeded the max CPM
+    if price_bucket['max'] == cpm_max_allowed:
+      break
+
   return prices
 
 def get_prices_summary_string(prices_array, precision=2):
