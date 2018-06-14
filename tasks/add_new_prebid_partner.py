@@ -83,15 +83,17 @@ def setup_partner(user_email, advertiser_name, order_name, use_placements, place
   # Get DFP key IDs for line item targeting.
   hb_bidder_key_id = get_or_create_dfp_targeting_key('hb_bidder')
   hb_pb_key_id = get_or_create_dfp_targeting_key('hb_pb')
+  hb_size_key_id = get_or_create_dfp_targeting_key('hb_size')
 
   # Instantiate DFP targeting value ID getters for the targeting keys.
   HBBidderValueGetter = DFPValueIdGetter('hb_bidder')
   HBPBValueGetter = DFPValueIdGetter('hb_pb')
+  HBSizeValueGetter = DFPValueIdGetter('hb_size')
 
   # Create line items.
   line_items_config = create_line_item_configs(prices, order_id,
     use_placements, placement_ids, ad_unit_ids, bidder_code, sizes, hb_bidder_key_id, 
-    hb_pb_key_id, currency_code, HBBidderValueGetter, HBPBValueGetter)
+    hb_pb_key_id, hb_size_key_id, currency_code, HBBidderValueGetter, HBPBValueGetter, HBSizeValueGetter)
   logger.info("Creating line items...")
   line_item_ids = dfp.create_line_items.create_line_items(line_items_config)
 
@@ -166,8 +168,8 @@ def get_or_create_dfp_targeting_key(name):
   return key_id
 
 def create_line_item_configs(prices, order_id, use_placements, placement_ids, ad_unit_ids,
-  bidder_code, sizes, hb_bidder_key_id, hb_pb_key_id, currency_code, HBBidderValueGetter,
-  HBPBValueGetter):
+  bidder_code, sizes, hb_bidder_key_id, hb_pb_key_id, hb_size_key_id, currency_code, HBBidderValueGetter,
+  HBPBValueGetter, HBSizeValueGetter):
   """
   Create a line item config for each price bucket.
 
@@ -180,9 +182,11 @@ def create_line_item_configs(prices, order_id, use_placements, placement_ids, ad
     bidder_code (str)
     hb_bidder_key_id (int)
     hb_pb_key_id (int)
+    hb_size_key_id (int)
     currency_code (str)
     HBBidderValueGetter (DFPValueIdGetter)
     HBPBValueGetter (DFPValueIdGetter)
+    HBSizeValueGetter (DFPValueIdGetter)
   Returns:
     an array of objects: the array of DFP line item configurations
   """
@@ -212,6 +216,9 @@ def create_line_item_configs(prices, order_id, use_placements, placement_ids, ad
     # The DFP targeting value ID for this `hb_pb` price value.
     hb_pb_value_id = HBPBValueGetter.get_value_id(price_str)
 
+    # The DFP targeting value ID for this `hb_size` price value.
+    hb_size_value_ids = [HBSizeValueGetter.get_value_id(str(size['width'])+'x'+str(size['height'])) for size in sizes]
+
     config = dfp.create_line_items.create_line_item_config(
       name=line_item_name,
       order_id=order_id,
@@ -224,6 +231,8 @@ def create_line_item_configs(prices, order_id, use_placements, placement_ids, ad
       hb_pb_key_id=hb_pb_key_id,
       hb_bidder_value_id=hb_bidder_value_id,
       hb_pb_value_id=hb_pb_value_id,
+      hb_size_key_id=hb_size_key_id,
+      hb_size_value_ids=hb_size_value_ids,
       currency_code=currency_code,
     )
 

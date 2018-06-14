@@ -24,7 +24,7 @@ def create_line_items(line_items):
   return created_line_item_ids
 
 def create_line_item_config(name, order_id, use_placements, placement_ids, ad_unit_ids,
-  cpm_micro_amount, sizes, hb_bidder_key_id, hb_pb_key_id, hb_bidder_value_id, hb_pb_value_id,
+  cpm_micro_amount, sizes, hb_bidder_key_id, hb_pb_key_id, hb_size_key_id, hb_bidder_value_id, hb_pb_value_id, hb_size_value_ids,
   currency_code='USD'):
   """
   Creates a line item config object.
@@ -41,6 +41,7 @@ def create_line_item_config(name, order_id, use_placements, placement_ids, ad_un
       keys, to set the creative sizes this line item will serve
     hb_bidder_key_id (int): the DFP ID of the `hb_bidder` targeting key
     hb_pb_key_id (int): the DFP ID of the `hb_pb` targeting key
+    hb_size_key_id (int): the DFP ID of the `hb_size` targeting key
     currency_code (str): the currency code (e.g. 'USD' or 'EUR')
   Returns:
     an object: the line item config
@@ -72,13 +73,20 @@ def create_line_item_config(name, order_id, use_placements, placement_ids, ad_un
     'operator': 'IS'
   }
 
+  hb_size_criteria = {
+    'xsi_type': 'CustomCriteria',
+    'keyId': hb_size_key_id,
+    'valueIds': hb_size_value_ids,
+    'operator': 'IS'
+  }
+
   # The custom criteria will resemble:
   # (hb_bidder_criteria.key == hb_bidder_criteria.value AND
   #    hb_pb_criteria.key == hb_pb_criteria.value)
   top_set = {
     'xsi_type': 'CustomCriteriaSet',
     'logicalOperator': 'AND',
-    'children': [hb_bidder_criteria, hb_pb_criteria]
+    'children': [hb_bidder_criteria, hb_pb_criteria, hb_size_criteria]
   }
 
   # https://developers.google.com/doubleclick-publishers/docs/reference/v201802/LineItemService.LineItem

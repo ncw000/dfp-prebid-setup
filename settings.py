@@ -9,7 +9,7 @@ GOOGLEADS_YAML_FILE = os.path.join(ROOT_DIR, 'googleads.yaml')
 #########################################################################
 
 # A string describing the order
-DFP_ORDER_NAME = 'Nathan Testing31'
+DFP_ORDER_NAME = 'Nathan Testing36'
 
 # The email of the DFP user who will be the trafficker for
 # the created order
@@ -73,21 +73,21 @@ PREBID_BIDDER_CODE = 'rubicon'
 # Price buckets. This should match your Prebid settings for the partner. See:
 # http://prebid.org/dev-docs/publisher-api-reference.html#module_pbjs.setPriceGranularity
 PREBID_PRICE_BUCKETS = [
-  {
-    'min': 0,
-    'max': 3,
-    'increment': 0.01
-  },
-  {
-    'min': 3,
-    'max': 8,
-    'increment': 0.05
-  },
-  {
-    'min': 8,
-    'max': 20,
-    'increment': 0.5
-  }
+{
+  'min': 0,
+  'max': 3,
+  'increment': 0.01
+},
+{
+  'min': 3,
+  'max': 8,
+  'increment': 0.05
+},
+{
+  'min': 8,
+  'max': 20,
+  'increment': 0.5
+}
 ]
 
 # The default precision (# of decimals) for the price buckets above. Can be overridden
